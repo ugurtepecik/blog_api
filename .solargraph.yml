@@ -1,0 +1,5 @@
+require_paths:
+  - app/models
+  - app/controllers
+  - db/migrate
+  - config
