@@ -19987,6 +19987,7 @@ class Pathname
 end
 
 module Process
+  extend ::Bundler::ConnectionPool::ForkTracker
   extend ::ActiveSupport::ForkTracker::CoreExt
 
   class << self

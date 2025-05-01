@@ -8,6 +8,9 @@
 # source://dry-inflector//lib/dry/inflector.rb#3
 module Dry
   class << self
+    # source://dry-configurable/1.3.0/lib/dry/configurable.rb#11
+    def Configurable(**options); end
+
     # source://dry-core/1.1.0/lib/dry/core.rb#52
     def Equalizer(*keys, **options); end
 

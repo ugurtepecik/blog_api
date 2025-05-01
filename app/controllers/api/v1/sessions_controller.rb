@@ -10,23 +10,29 @@ module Api
 
       sig { void }
       def create
-        Users::LoginService.new(
-          email: login_params[:email],
-          password: login_params[:password]
-        )
-        .call
+        Users::LoginContract.new.call(login_params.to_h)
+        .bind { |params| login(params) }
         .bind { |user_struct| generate_token(user_struct)
         }
         .fmap { | (user_struct, token) |
-        puts token
           render_success(payload: UserBlueprint.render_as_hash(user_struct), meta: LoginResponseBlueprint.render_as_hash({ token: token }))
         }
-        .or { |error_message|
-          render_error(message: error_message, status: determine_error_status(error_message))
-        }
+        .or { |error|
+        render_error(error)
+      }
       end
 
       private
+
+      def login(params)
+          Users::LoginService.new(
+            email: params[:email],
+            password: params[:password]
+          ).call()
+          .or { |error_message|
+             Failure(Errors::AuthenticationError.new(message: error_message))
+          }
+      end
 
       sig { returns(ActionController::Parameters) }
       def login_params
@@ -39,11 +45,9 @@ module Api
         .fmap {
           |token|  [ user_struct, token ]
         }
-      end
-
-      sig { params(error_message: String).returns(Integer) }
-      def determine_error_status(error_message)
-        error_message.include?("Invalid email or password") ? 401 : 500
+        .or {
+          Failure(Error::UnknownError.new())
+        }
       end
     end
   end

@@ -1,3 +1,5 @@
+# typed: false
+
 require_relative "boot"
 
 require "rails/all"
@@ -22,12 +24,8 @@ module BlogApi
     config.autoload_lib(ignore: %w[assets tasks])
 
     config.eager_load_paths += %W[
-        #{config.root}/app/services
-        #{config.root}/app/blueprints
-        #{config.root}/app/mappers
-        #{config.root}/app/queries
-        #{config.root}/app/serializers
-        #{config.root}/app/structs
+    #{config.root}/app
+    #{config.root}/app/contracts
     ]
 
     # Configuration for the application, engines, and railties goes here.

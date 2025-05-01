@@ -12,6 +12,9 @@
 # source://dry-types//lib/dry/types/constraints.rb#3
 module Dry
   class << self
+    # source://dry-configurable/1.3.0/lib/dry/configurable.rb#11
+    def Configurable(**options); end
+
     # source://dry-core/1.1.0/lib/dry/core.rb#52
     def Equalizer(*keys, **options); end
 
@@ -1762,6 +1765,10 @@ class Dry::Types::Container
   include ::Dry::Core::Container::Mixin::Initializer
   include ::Dry::Core::Container::Mixin
   extend ::Dry::Core::Container::Configuration
+  extend ::Dry::Core::Constants
+  extend ::Dry::Configurable
+  extend ::Dry::Configurable::Methods
+  extend ::Dry::Configurable::ClassMethods
 
   # source://dry-core/1.1.0/lib/dry/core/container/mixin.rb#83
   def config; end

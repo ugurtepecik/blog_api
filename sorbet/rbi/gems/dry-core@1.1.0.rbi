@@ -8,6 +8,9 @@
 # source://dry-core//lib/dry/core/constants.rb#5
 module Dry
   class << self
+    # source://dry-configurable/1.3.0/lib/dry/configurable.rb#11
+    def Configurable(**options); end
+
     # Build an equalizer module for the inclusion in other class
     #
     # ## Credits
@@ -463,6 +466,10 @@ class Dry::Core::Container
   include ::Dry::Core::Constants
   include ::Dry::Core::Container::Mixin
   extend ::Dry::Core::Container::Configuration
+  extend ::Dry::Core::Constants
+  extend ::Dry::Configurable
+  extend ::Dry::Configurable::Methods
+  extend ::Dry::Configurable::ClassMethods
 
   # source://dry-core//lib/dry/core/container/mixin.rb#83
   def config; end
@@ -528,14 +535,16 @@ Dry::Core::Container::Config::DEFAULT_RESOLVER = T.let(T.unsafe(nil), Dry::Core:
 #
 # source://dry-core//lib/dry/core/container/configuration.rb#7
 module Dry::Core::Container::Configuration
-  # source://dry-core//lib/dry/core/container/configuration.rb#25
-  def config; end
-
   # @api private
   # @yield [config]
   #
   # source://dry-core//lib/dry/core/container/configuration.rb#31
   def configure; end
+
+  class << self
+    # source://dry-core//lib/dry/core/container/configuration.rb#13
+    def extended(klass); end
+  end
 end
 
 # source://dry-core//lib/dry/core/constants.rb#112
@@ -726,6 +735,8 @@ class Dry::Core::Container::KeyError < ::KeyError; end
 # source://dry-core//lib/dry/core/container/mixin.rb#47
 module Dry::Core::Container::Mixin
   mixes_in_class_methods ::Dry::Core::Container::Configuration
+  mixes_in_class_methods ::Dry::Configurable
+  mixes_in_class_methods ::Dry::Configurable::ClassMethods
 
   # Resolve an item from the container
   #
@@ -1837,6 +1848,9 @@ class Dry::Types::Compiler
 end
 
 class Dry::Types::Container
+  extend ::Dry::Core::Constants
+  extend ::Dry::Configurable::Methods
+
   # source://dry-core//lib/dry/core/container/mixin.rb#83
   def config; end
 end

@@ -14,8 +14,8 @@ class ApplicationController < ActionController::API
     end
   end
 
-  sig { params(message: String, status: Integer).void }
-  def render_error(message:, status: 400)
-    render json: { status: "error", error: message }, status: status
+  sig { params(error: ApplicationError).void }
+  def render_error(error)
+    render json: { status: "error", error: error.message }, status: error.status
   end
 end

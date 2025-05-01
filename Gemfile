@@ -16,6 +16,7 @@ gem "bcrypt", "~> 3.1.20"
 gem "dry-monads"
 gem "dry-struct"
 gem "dry-types"
+gem "dry-validation"
 gem "blueprinter"
 gem "jwt"
 

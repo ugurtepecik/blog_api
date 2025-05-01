@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require "typedfiles"
-
-Typedfiles::CLI.new(ARGV).run
