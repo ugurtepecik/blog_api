@@ -15427,6 +15427,9 @@ class YARD::Tags::Library
   # source://yard//lib/yard/tags/library.rb#258
   def factory=(_arg0); end
 
+  # source://yard//lib/yard/tags/library.rb#168
+  def generic_tag(text); end
+
   # source://yard//lib/yard/tags/library.rb#202
   def group_directive(tag, parser); end
 
@@ -15499,6 +15502,9 @@ class YARD::Tags::Library
   #
   # source://yard//lib/yard/tags/library.rb#161
   def overload_tag(text); end
+
+  # source://yard//lib/yard/tags/library.rb#202
+  def override_directive(tag, parser); end
 
   # Documents a single method parameter (either regular or keyword) with a given name, type
   # and optional description.
@@ -15643,6 +15649,9 @@ class YARD::Tags::Library
   # source://yard//lib/yard/tags/library.rb#168
   def todo_tag(text); end
 
+  # source://yard//lib/yard/tags/library.rb#168
+  def type_tag(text); end
+
   # Lists the version of a class, module or method. This is
   # similar to a library version, but at finer granularity.
   # In some cases, version of specific modules, classes, methods
@@ -15691,6 +15700,9 @@ class YARD::Tags::Library
   #
   # source://yard//lib/yard/tags/library.rb#168
   def yieldparam_tag(text); end
+
+  # source://yard//lib/yard/tags/library.rb#168
+  def yieldreceiver_tag(text); end
 
   # Documents the value and type that the block is expected
   # to return to the method.

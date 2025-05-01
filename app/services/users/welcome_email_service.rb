@@ -14,7 +14,7 @@ module Users
       @user = user_struct
     end
 
-    sig { returns(T::Boolean) }
+    sig { returns(Dry::Monads::Success) }
     def call
       Rails.logger.info "Welcome email"
       Success.new(true)

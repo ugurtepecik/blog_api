@@ -53,8 +53,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
   gem "rubocop", require: false
 
-  gem "sorbet"
-  gem "sorbet-runtime"
-  gem "tapioca", "~> 0.16.0", require: false
+  gem "sorbet-static-and-runtime"
+  gem "tapioca", require: false
   gem "rubocop-sorbet", require: false
+  gem "solargraph"
 end
