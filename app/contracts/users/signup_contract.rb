@@ -4,17 +4,20 @@ require 'dry-validation'
 require 'uri'
 
 module Users
-  class LoginContract < ApplicationContract
+  class SignupContract < ApplicationContract
     extend T::Sig
     include Dry::Monads::Result::Mixin
 
     def self.key?(key)
-      %i[email password].include?(key)
+      %i[username password email first_name last_name].include?(key)
     end
 
     params do
-      required(:email).filled(:string, format?: URI::MailTo::EMAIL_REGEXP)
+      required(:username).filled(:string, min_size?: 6)
       required(:password).filled(:string, min_size?: 6)
+      required(:email).filled(:string, format?: URI::MailTo::EMAIL_REGEXP)
+      required(:last_name).filled(:string)
+      required(:first_name).filled(:string)
     end
 
     sig do

@@ -10,11 +10,9 @@ module Users
 
     attr_reader :params, :user
 
-    InputParam = T.type_alias { T.nilable(T.any(String, Numeric, ActionController::Parameters)) }
-
-    sig { params(email: InputParam, password: InputParam).void }
-    def initialize(email:, password:)
-      @params = T.let({ email: email, password: password }, T::Hash[T.untyped, T.untyped])
+    sig { params(params: T::Hash[Symbol, T.untyped]).void }
+    def initialize(params:)
+      @params = params
     end
 
     sig { returns(Dry::Monads::Result[String, UserStruct]) }

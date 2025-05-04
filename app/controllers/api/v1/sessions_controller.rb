@@ -25,20 +25,24 @@ module Api
 
       private
 
-      sig { returns(Dry::Monads::Result[Errors::AuthenticationError, UserStruct]) }
+      sig { returns(Dry::Monads::Result[ApplicationError, UserStruct]) }
       def login
-        Users::LoginService.new(
-          email: login_params[:email],
-          password: login_params[:password]
-        ).call
-          .or do |error_message|
-          Failure(Errors::AuthenticationError.new(message: error_message))
+        login_params.bind do |validated_params|
+          Users::LoginService.new(params: validated_params).call
         end
+          .or do |error|
+            case error
+            in ApplicationError
+              Failure(error)
+            else
+              Failure(Errors::AuthenticationError.new(message: error))
+            end
+          end
       end
 
-      sig { returns(ActionController::Parameters) }
+      sig { returns(Dry::Monads::Result[Errors::ValidationError, T::Hash[Symbol, T.untyped]]) }
       def login_params
-        params.require(:user).permit(:email, :password)
+        Users::LoginContract.new.call(params)
       end
 
       sig { params(user_struct: UserStruct).returns(Dry::Monads::Result[Errors::UnknownError, [UserStruct, String]]) }

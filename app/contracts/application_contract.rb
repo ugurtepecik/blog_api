@@ -19,7 +19,7 @@ class ApplicationContract < Dry::Validation::Contract
       Success(result.to_h)
     else
       error_message = result.errors(full: true).map(&:text).join(', ')
-      Failure(error_message)
+      Failure(Errors::ValidationError.new(message: error_message))
     end
   end
 end
