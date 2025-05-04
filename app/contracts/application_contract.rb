@@ -1,13 +1,13 @@
-# typed: strict
+# typed: true
 
-require "dry/validation"
-require "dry/monads"
+require 'dry/validation'
+require 'dry/monads'
 
 class ApplicationContract < Dry::Validation::Contract
-  include Dry::Monads[:result]
+  include Dry::Monads::Result::Mixin
 
   def call(params)
-    result = super(params)
+    result = super
 
     wrap_result(result)
   end
@@ -18,7 +18,7 @@ class ApplicationContract < Dry::Validation::Contract
     if result.success?
       Success(result.to_h)
     else
-      error_message = result.errors(full: true).map(&:text).join(", ")
+      error_message = result.errors(full: true).map(&:text).join(', ')
       Failure(error_message)
     end
   end

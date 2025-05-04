@@ -1,12 +1,12 @@
-# typed: strict
+# typed: true
 
-require "dry/monads"
+require 'dry/monads'
 
 module Users
   class SignupService
     extend T::Sig
 
-    include Dry::Monads[:result]
+    include Dry::Monads::Result::Mixin
 
     attr_reader :user
 
@@ -15,34 +15,59 @@ module Users
       @params = params
     end
 
-    sig { returns(Dry::Monads::Result) }
+    sig { returns(Dry::Monads::Result[T::Array[String], UserStruct]) }
     def call
       user = User.new(@params)
 
       save_user(user)
-        .tee { |user| Users::WelcomeEmailService.new(user).call }
-        .fmap { |user_struct|
+        .tee do |user_struct|
+          Users::WelcomeEmailService.new(user_struct).call
+          Success(T.must(user_struct))
+        end
+        .fmap do |user_struct|
           Rails.logger.info("Signup success for #{user_struct.username}")
           @user = user_struct
           @user
-        }
-        .or   { |errors|
-          Rails.logger.error("Signup failed: #{errors.join(", ")}")
+        end
+        .or do |errors|
+          Rails.logger.error("Signup failed: #{errors.join(', ')}")
           Failure(errors)
-        }
+        end
     end
 
     private
 
-    sig { params(user: T.nilable(User)).returns(Dry::Monads::Result) }
+    sig { params(user: T.nilable(User)).returns(Dry::Monads::Result[T::Array[String], UserStruct]) }
     def save_user(user)
-      if T.must(user).save
-        Rails.logger.info "User created successfully: #{T.must(user).username} (#{T.must(user).email})"
-        Success(UserMapper.to_struct(user))
+      return fail_with_log('User is nil') if user.nil?
+
+      if user.save
+        handle_successful_save(user)
       else
-        Rails.logger.error "User signup failed: #{T.must(user).errors.full_messages.join(", ")}"
-        Failure(T.must(user).errors.full_messages)
+        handle_failed_save(user)
       end
+    end
+
+    sig { params(user: User).returns(Dry::Monads::Result[T::Array[String], UserStruct]) }
+    def handle_successful_save(user)
+      Rails.logger.info "User created successfully: #{user.username} (#{user.email})"
+      user_struct = UserMapper.to_struct(user)
+      return fail_with_log('User struct is nil') if user_struct.nil?
+
+      Success(user_struct)
+    end
+
+    sig { params(user: User).returns(Dry::Monads::Result[T::Array[String], UserStruct]) }
+    def handle_failed_save(user)
+      error_messages = user.errors.full_messages
+      Rails.logger.error "User signup failed: #{error_messages.join(', ')}"
+      Failure(error_messages)
+    end
+
+    sig { params(message: String).returns(Dry::Monads::Result[T::Array[String], T.untyped]) }
+    def fail_with_log(message)
+      Rails.logger.error(message)
+      Failure([message])
     end
   end
 end

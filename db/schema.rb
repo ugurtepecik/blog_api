@@ -10,20 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_26_011313) do
+ActiveRecord::Schema[8.0].define(version: 20_250_426_011_313) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-  enable_extension "uuid-ossp"
+  enable_extension 'pg_catalog.plpgsql'
+  enable_extension 'uuid-ossp'
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "username", null: false
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.string "email", null: false
-    t.string "password_digest", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
+  create_table 'users', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'username', null: false
+    t.string 'first_name', null: false
+    t.string 'last_name', null: false
+    t.string 'email', null: false
+    t.string 'password_digest', null: false
+    t.datetime 'created_at', default: -> { 'CURRENT_TIMESTAMP' }, null: false
+    t.datetime 'updated_at', default: -> { 'CURRENT_TIMESTAMP' }, null: false
+    t.index ['email'], name: 'index_users_on_email', unique: true
+    t.index ['username'], name: 'index_users_on_username', unique: true
   end
 end

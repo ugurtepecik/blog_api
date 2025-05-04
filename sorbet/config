@@ -1,2 +1,9 @@
---dir
-app/
+--max-threads=4
+
+--dir=.
+
+--ignore=bin
+--ignore=spec
+--ignore=node_modules
+--ignore=vendor
+--ignore=db/schema.rb

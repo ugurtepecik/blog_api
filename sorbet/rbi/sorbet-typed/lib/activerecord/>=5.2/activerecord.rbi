@@ -8,7 +8,7 @@
 # typed: strong
 
 class ActiveRecord::Base
-  extend Delegator
+  extend ActiveRecord::Delegation::DelegateCache
   include ActiveRecord::DefineCallbacks
   include ActiveRecord::TouchLater
   include ActiveRecord::SecureToken
@@ -25,5 +25,5 @@ module ActiveRecord::DefineCallbacks
 end
 
 module ActiveRecord::DefineCallbacks::ClassMethods
-  include(Class)
+  include(::ActiveModel::Callbacks)
 end

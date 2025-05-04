@@ -1,13 +1,11 @@
+# config/tapioca.yml
 gem:
-  # Add your `gem` command parameters here:
-  #
+  workers: 4
   # exclude:
-  # - gem_name
-  # doc: true
-  # workers: 5
+  #   - some_gem
+
 dsl:
-  # Add your `dsl` command parameters here:
-  #
+  outdir: sorbet/rbi/dsl
+  workers: 4
   # exclude:
-  # - SomeGeneratorName
-  # workers: 5
+  #   - SomeGeneratorName

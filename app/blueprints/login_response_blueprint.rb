@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 
 class LoginResponseBlueprint < Blueprinter::Base
   fields :token

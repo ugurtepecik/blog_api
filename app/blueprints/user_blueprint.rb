@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 
 class UserBlueprint < Blueprinter::Base
   identifier :id

@@ -1,13 +1,43 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
-
-require:
+# .rubocop.yml
+plugins:
   - rubocop-sorbet
 
-Sorbet:
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - "sorbet/**/*"
+
+Sorbet/HasSigil: { Enabled: true }
+Sorbet/StrictSigil: { Enabled: false }
+Sorbet/EnforceSingleSigil: { Enabled: true }
+Sorbet/ValidSigil:
   Enabled: true
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+  AllowedSigils: [false, true, strict, strong, ignore]
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented_relative_to_receiver
+
+Layout/MultilineOperationIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+Layout/FirstParameterIndentation:
+  Enabled: true
+  EnforcedStyle: consistent
+
+Style/EmptyBlockParameter:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20

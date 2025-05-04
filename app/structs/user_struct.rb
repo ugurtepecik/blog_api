@@ -1,7 +1,7 @@
-# typed: strict
+# typed: true
 
-require "dry-struct"
-require "dry-types"
+require 'dry-struct'
+require 'dry-types'
 
 module Types
   include Dry.Types

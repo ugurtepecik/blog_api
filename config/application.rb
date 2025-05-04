@@ -1,12 +1,12 @@
 # typed: false
 
-require_relative "boot"
+require_relative 'boot'
 
-require "rails/all"
+require 'rails/all'
 
-require "sorbet-runtime"
+require 'sorbet-runtime'
 
-Sorbet::Private::Runtime.load_runtime if defined?(Sorbet::Private::Runtime)
+# Sorbet::Private::Runtime.load_runtime if defined?(Sorbet::Private::Runtime)
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,8 +24,7 @@ module BlogApi
     config.autoload_lib(ignore: %w[assets tasks])
 
     config.eager_load_paths += %W[
-    #{config.root}/app
-    #{config.root}/app/contracts
+      #{config.root}/app
     ]
 
     # Configuration for the application, engines, and railties goes here.

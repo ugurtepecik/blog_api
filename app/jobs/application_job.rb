@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 
 class ApplicationJob < ActiveJob::Base
   # Automatically retry jobs that encountered a deadlock

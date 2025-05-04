@@ -1,12 +1,12 @@
-# typed: strict
+# typed: true
 
-require "dry/monads"
+require 'dry/monads'
 
 module Users
   class WelcomeEmailService
     extend T::Sig
 
-    include Dry::Monads[:result]
+    include Dry::Monads::Result::Mixin
 
     attr_reader :user
 
@@ -16,8 +16,8 @@ module Users
 
     sig { returns(Dry::Monads::Success) }
     def call
-      Rails.logger.info "Welcome email"
-      Success.new(true)
+      Rails.logger.info 'Welcome email'
+      Success(true)
     end
   end
 end

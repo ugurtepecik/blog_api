@@ -1,22 +1,22 @@
-# typed: strict
+# typed: true
 
-require "jwt"
-require "dry/monads"
+require 'jwt'
+require 'dry/monads'
 
 module Jwt
   SECRET_KEY = T.let(
-    Rails.application.credentials.jwt_secret || "default_secret_key", String
+    Rails.application.credentials.jwt_secret || 'default_secret_key', String
   )
 
-  ALGORITHM = T.let("HS256", String)
+  ALGORITHM = T.let('HS256', String)
 
   class JwtEncoder
     extend T::Sig
-    extend Dry::Monads[:result]
+    extend Dry::Monads::Result::Mixin
 
     EXPIRATION_TIME = T.let((Rails.application.config.jwt_expiration_time || 24).hours.to_i, Integer)
 
-    sig { params(payload: T::Hash[Symbol, T.untyped]).returns(Dry::Monads::Result) }
+    sig { params(payload: T::Hash[Symbol, T.untyped]).returns(Dry::Monads::Result[String, String]) }
     def self.encode(payload)
       payload_with_exp = payload.merge(
         exp: Time.now.to_i + EXPIRATION_TIME
@@ -32,15 +32,15 @@ module Jwt
 
   class JwtDecoder
     extend T::Sig
-    extend Dry::Monads[:result]
+    extend Dry::Monads::Result::Mixin
 
-    sig { params(token: String).returns(Dry::Monads::Result) }
+    sig { params(token: String).returns(Dry::Monads::Result[String, T::Hash[String, T.untyped]]) }
     def self.decode(token)
       decoded_token = JWT.decode(token, SECRET_KEY, true, { algorithm: ALGORITHM })
       payload = decoded_token.first
       Success(payload)
     rescue JWT::ExpiredSignature
-      Failure("Token has expired")
+      Failure('Token has expired')
     rescue JWT::DecodeError => e
       Failure("Invalid token: #{e.message}")
     rescue StandardError => e

@@ -1,6 +1,5 @@
-# typed: strict
+# typed: true
 
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
-  abort "mailer"
+  default from: 'from@example.com'
 end

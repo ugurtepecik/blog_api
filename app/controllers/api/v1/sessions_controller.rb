@@ -1,37 +1,39 @@
-# typed: strict
+# typed: true
 
-require "dry/monads"
+require 'dry/monads'
 
 module Api
   module V1
     class SessionsController < ApplicationController
       extend T::Sig
-      include Dry::Monads[:result]
+      include Dry::Monads::Result::Mixin
 
       sig { void }
       def create
-        Users::LoginContract.new.call(login_params.to_h)
-        .bind { |params| login(params) }
-        .bind { |user_struct| generate_token(user_struct)
-        }
-        .fmap { | (user_struct, token) |
-          render_success(payload: UserBlueprint.render_as_hash(user_struct), meta: LoginResponseBlueprint.render_as_hash({ token: token }))
-        }
-        .or { |error|
-        render_error(error)
-      }
+        login
+          .bind do |user_struct|
+          generate_token(user_struct)
+        end
+          .fmap do |(user_struct, token)|
+          render_success(payload: UserBlueprint.render_as_hash(user_struct),
+                         meta: LoginResponseBlueprint.render_as_hash({ token: token }))
+        end
+          .or do |error|
+          render_error(error)
+        end
       end
 
       private
 
-      def login(params)
-          Users::LoginService.new(
-            email: params[:email],
-            password: params[:password]
-          ).call()
-          .or { |error_message|
-             Failure(Errors::AuthenticationError.new(message: error_message))
-          }
+      sig { returns(Dry::Monads::Result[Errors::AuthenticationError, UserStruct]) }
+      def login
+        Users::LoginService.new(
+          email: login_params[:email],
+          password: login_params[:password]
+        ).call
+          .or do |error_message|
+          Failure(Errors::AuthenticationError.new(message: error_message))
+        end
       end
 
       sig { returns(ActionController::Parameters) }
@@ -39,15 +41,15 @@ module Api
         params.require(:user).permit(:email, :password)
       end
 
-      sig { params(user_struct: UserStruct).returns(Dry::Monads::Result) }
+      sig { params(user_struct: UserStruct).returns(Dry::Monads::Result[Errors::UnknownError, [UserStruct, String]]) }
       def generate_token(user_struct)
         Jwt::JwtEncoder.encode({ user_id: user_struct.id })
-        .fmap {
-          |token|  [ user_struct, token ]
-        }
-        .or {
-          Failure(Error::UnknownError.new())
-        }
+          .fmap do |token|
+          [user_struct, token]
+        end
+          .or do
+          Failure(Errors::UnknownError.new)
+        end
       end
     end
   end

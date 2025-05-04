@@ -1,0 +1,20 @@
+{
+  "sorbet.lspConfigs": [
+    {
+      "id": "default",
+      "name": "Sorbet (asdf fish)",
+      "cwd": "${workspaceFolder}",
+      "command": [
+        "asdf",
+        "exec",
+        "bundle",
+        "exec",
+        "srb",
+        "tc",
+        "--lsp",
+        "--disable-watchman"
+      ]
+    }
+  ],
+  "sorbet.selectedLspConfigId": "default"
+}
